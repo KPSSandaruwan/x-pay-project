@@ -12,7 +12,9 @@ exports.createOrder = (req, res) => {
       !Array.isArray(requestProducts) ||
       requestProducts.length === 0
     ) {
-      return res.status(400).json({ success: false, message: "Invalid order data" });
+      return res
+        .status(400)
+        .json({ success: false, message: "Invalid order data" });
     }
 
     for (const item of requestProducts) {
@@ -39,8 +41,6 @@ exports.createOrder = (req, res) => {
 
     orders.push(newOrder);
     orderQueue.push(newOrder.id);
-
-    console.log('ASAAAAA', availableProducts)
 
     res.status(201).json({
       success: true,
@@ -151,9 +151,9 @@ exports.processNextOrder = (req, res) => {
       }
     }
 
-    return res.status(400).json({ 
-      success: false, 
-      message: "No pending orders in queue" 
+    return res.status(400).json({
+      success: false,
+      message: "No pending orders in queue"
     });
   } catch (error) {
     res.status(500).json({
