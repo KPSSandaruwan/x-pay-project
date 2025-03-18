@@ -40,6 +40,8 @@ exports.createOrder = (req, res) => {
     orders.push(newOrder);
     orderQueue.push(newOrder.id);
 
+    console.log('ASAAAAA', availableProducts)
+
     res.status(201).json({
       success: true,
       message: "Order created successfully",
