@@ -135,18 +135,24 @@ exports.deleteSingleOrder = (req, res) => {
 
 exports.processNextOrder = (req, res) => {
   try {
-    if (orderQueue.length === 0) {
-      return res.status(400).json({ success: false, message: "No orders in queue" });
+    while (orderQueue.length > 0) {
+      const nextOrderId = orderQueue.shift();
+      const order = orders.find((o) => o.id === nextOrderId);
+
+      if (order && order.status === orderStatus.PENDING) {
+        order.status = orderStatus.PROCESSED;
+        return res.status(200).json({
+          success: true,
+          message: "Order processed",
+          order: order
+        });
+      }
     }
 
-    const nextOrderId = orderQueue.shift();
-    const order = orders.find((o) => o.id === nextOrderId);
-    if (order) {
-      order.status = orderStatus.PROCESSED;
-      res
-        .status(200)
-        .json({ success: true, message: "Order processed", order: order });
-    }
+    return res.status(400).json({ 
+      success: false, 
+      message: "No pending orders in queue" 
+    });
   } catch (error) {
     res.status(500).json({
       success: false,
