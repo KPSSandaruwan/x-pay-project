@@ -5,4 +5,6 @@ router.get("/", (req, res) => {
   res.send("Welcome to the API V1");
 });
 
+require("./orderRoutes")(router);
+
 module.exports.router = router;
